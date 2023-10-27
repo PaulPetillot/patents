@@ -1,12 +1,11 @@
 import { Text, Grid } from '@chakra-ui/react'
-import { useState, lazy, Suspense } from 'react'
+import { useState } from 'react'
 
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { useSearch } from '~/utils/hooks/useSearch'
 
 import { Header } from './components/Header'
-
-const Patents = lazy(() => import('./components/Patents'))
+import { Patents } from './components/Patents'
 
 export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -15,12 +14,11 @@ export const Home = () => {
     toDate: '',
   })
 
-  const { patents, loading, loadMore, hasMore, recordAmount, initialLoad } =
-    useSearch({
-      searchTerm,
-      fromDate,
-      toDate,
-    })
+  const { patents, loading, loadMore, hasMore, recordAmount } = useSearch({
+    searchTerm,
+    fromDate,
+    toDate,
+  })
 
   const handleSubmit = (
     event: React.FormEvent<HTMLFormElement>,
@@ -44,16 +42,9 @@ export const Home = () => {
       <Header />
       {searchTerm && <Text>{recordAmount} results</Text>}
       <SearchBar handleSubmit={handleSubmit} loading={loading} />
-      <Suspense fallback={<div key={1}>Loading...</div>}>
-        {patents.length ? (
-          <Patents
-            loadMore={loadMore}
-            hasMore={hasMore}
-            initialLoad={initialLoad}
-            patents={patents}
-          />
-        ) : null}
-      </Suspense>
+      {patents.length ? (
+        <Patents loadMore={loadMore} hasMore={hasMore} patents={patents} />
+      ) : null}
     </Grid>
   )
 }

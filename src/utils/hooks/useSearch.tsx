@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
 import dayjs from 'dayjs'
 import { useState, useEffect } from 'react'
 
@@ -41,7 +39,6 @@ export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
   const [recordAmount, setRecordAmount] = useState(0)
   const [start, setStart] = useState(0)
   const [rowAmount, setRowAmount] = useState(25)
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const loadMore = () => {
     if (loading || !hasMore) return
@@ -51,9 +48,6 @@ export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
       setHasMore(false)
     } else {
       setStart(start + rowAmount)
-    }
-    if (initialLoad) {
-      setInitialLoad(false)
     }
   }
 
@@ -84,6 +78,7 @@ export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
         setPatents((prev) => [...prev, results].flat())
         setRecordAmount(recordTotalQuantity)
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err)
       } finally {
         setLoading(false)
@@ -103,6 +98,5 @@ export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
     hasMore,
     recordAmount,
     loadMore,
-    initialLoad,
   }
 }

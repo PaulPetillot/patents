@@ -1,40 +1,51 @@
 import { Box } from '@chakra-ui/react'
-import InfiniteScroll from 'react-infinite-scroller'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FixedSizeList as List } from 'react-window'
 
 import { Patent } from '~/components/Patent/Patent'
 import type { IPatent } from '~/utils/types'
 
-const Patents = ({
+const Row = ({
+  index,
+  style,
   patents,
-  initialLoad,
+}: {
+  index: number
+  style: React.CSSProperties | undefined
+  patents: IPatent[]
+}) => (
+  <Box style={style}>
+    <Patent patent={patents[index]} />
+  </Box>
+)
+
+export const Patents = ({
+  patents,
   loadMore,
   hasMore,
 }: {
   patents: IPatent[]
-  initialLoad: boolean
   loadMore: () => void
   hasMore: boolean
 }) => {
+  const itemSize = 860
+
+  // Using react-window to dynamically show and hide patents that are offscreen to keep a high performance page and avoid thousands of them to be on the DOM
   return (
-    <InfiniteScroll
-      initialLoad={initialLoad}
-      pageStart={0}
-      loadMore={loadMore}
-      hasMore={hasMore}
-      loader={<div key={0}>Loading...</div>}
+    <List
+      height={860}
+      itemCount={patents.length}
+      itemSize={itemSize}
+      width="100%"
+      onItemsRendered={({ visibleStopIndex }) => {
+        if (hasMore && visibleStopIndex === patents.length - 1) {
+          loadMore()
+        }
+      }}
     >
-      {patents.map(({ ...patentProps }, i) => (
-        <Box
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${patentProps.inventionTitle}-${i}`}
-          mt={4}
-          maxW={[350, 800]}
-        >
-          <Patent patent={patentProps} />
-        </Box>
-      ))}
-    </InfiniteScroll>
+      {({ style, index }) => (
+        <Row style={style} index={index} patents={patents} />
+      )}
+    </List>
   )
 }
-
-export default Patents

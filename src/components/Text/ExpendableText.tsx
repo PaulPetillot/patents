@@ -21,7 +21,7 @@ export const ExpendableText = ({
       }}
       borderRadius={5}
       cursor="pointer"
-      noOfLines={expend ? undefined : 3}
+      noOfLines={expend ? undefined : 5}
       mt="4"
       p={1}
     >
