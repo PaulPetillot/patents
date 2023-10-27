@@ -32,6 +32,7 @@ const buildRequest = (
   return apiUrl
 }
 
+// This hook is fetching the necessary data with the according filters.
 export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
   const [patents, setPatents] = useState<IPatent[]>([])
   const [loading, setLoading] = useState(false)

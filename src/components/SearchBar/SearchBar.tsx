@@ -11,25 +11,35 @@ import {
 import { useState } from 'react'
 import { RiSearch2Line as SearchIcon } from 'react-icons/ri'
 
+import { usePatents } from '~/utils/hooks/usePatents'
+
 interface ISearchBar {
   loading: boolean
-  handleSubmit: (
-    event: React.FormEvent<HTMLFormElement>,
-    searchValue: string,
-    fromDateFilter: string,
-    toDateFilter: string
-  ) => void
 }
 
-export const SearchBar = ({ loading, handleSubmit }: ISearchBar) => {
-  const [searchValue, setSearchValue] = useState('')
+export const SearchBar = ({ loading }: ISearchBar) => {
+  const { searchParams, updateValues } = usePatents()
+  const [searchValue, setSearchValue] = useState(searchParams.searchTerm || '')
   const [{ fromDate, toDate }, setTemporaryFilters] = useState({
-    fromDate: '',
-    toDate: '',
+    fromDate: searchParams.fromDate || '',
+    toDate: searchParams.toDate || '',
   })
 
+  const handleSubmit = (
+    event: React.FormEvent<HTMLFormElement>,
+    fromDateFilter: string,
+    toDateFilter: string
+  ) => {
+    event.preventDefault()
+    updateValues({
+      searchTerm: searchValue,
+      fromDate: fromDateFilter,
+      toDate: toDateFilter,
+    })
+  }
+
   return (
-    <form onSubmit={(e) => handleSubmit(e, searchValue, fromDate, toDate)}>
+    <form onSubmit={(e) => handleSubmit(e, fromDate, toDate)}>
       <Flex flexDirection={['column', 'row']} gap={2}>
         <Flex
           justifyContent="center"

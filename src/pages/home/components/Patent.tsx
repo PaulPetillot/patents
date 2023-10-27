@@ -11,7 +11,7 @@ import {
 import { RiDownloadFill } from 'react-icons/ri'
 import { Link as ReactRouterLink } from 'react-router-dom'
 
-import { TruncatedParagraph } from '../Text/TruncatedParagraph'
+import { TruncatedParagraph } from '../../../components/Text/TruncatedParagraph'
 import type { IPatent } from '~/utils/types'
 
 export const Patent = ({ patent }: { patent: IPatent }) => {
@@ -27,13 +27,14 @@ export const Patent = ({ patent }: { patent: IPatent }) => {
     filelocationURI = '',
     descriptionText = [],
     claimText = [],
+    archiveURI = '',
   } = patent
 
   return (
     <Flex
       flexDirection="column"
       justifyContent="space-around"
-      height="850px"
+      height="800px"
       borderWidth="1px"
       borderRadius="lg"
       padding="6"
@@ -44,7 +45,11 @@ export const Patent = ({ patent }: { patent: IPatent }) => {
       }}
     >
       <Link
+        _hover={{
+          textDecoration: 'none',
+        }}
         preventScrollReset
+        textDecoration="none"
         as={ReactRouterLink}
         to={`/patent/${patentApplicationNumber}`}
         state={{ patent }}
@@ -68,12 +73,11 @@ export const Patent = ({ patent }: { patent: IPatent }) => {
           <strong>Publication Identifier:</strong>{' '}
           {publicationDocumentIdentifier || 'N/A'}
         </Text>
-
-        {inventorNameArrayText && inventorNameArrayText.length && (
-          <>
-            <Heading as="h3" size="lg" my="4">
-              Inventor(s)
-            </Heading>
+        <>
+          <Heading as="h3" size="lg" my="4">
+            Inventor(s)
+          </Heading>
+          {inventorNameArrayText && inventorNameArrayText.length ? (
             <List
               spacing={1}
               display="grid"
@@ -88,8 +92,10 @@ export const Patent = ({ patent }: { patent: IPatent }) => {
                   ))}
               {inventorNameArrayText.length > 4 ? <Text>& more...</Text> : ''}
             </List>
-          </>
-        )}
+          ) : (
+            'N/A'
+          )}
+        </>
 
         <TruncatedParagraph
           title="Abstract"
@@ -100,15 +106,23 @@ export const Patent = ({ patent }: { patent: IPatent }) => {
           text={descriptionText?.[0] || 'N/A'}
         />
         <TruncatedParagraph title="Claim" text={claimText?.[0] || 'N/A'} />
-
+      </Link>
+      <Flex>
         {filelocationURI ? (
           <Link href={filelocationURI} isExternal color="blue.500">
-            <Button mt="4" leftIcon={<RiDownloadFill />}>
-              Download
+            <Button mr="2" mt="4" leftIcon={<RiDownloadFill />}>
+              Download Patent Application
             </Button>
           </Link>
         ) : null}
-      </Link>
+        {archiveURI ? (
+          <Link href={archiveURI} isExternal color="blue.500">
+            <Button mt="4" leftIcon={<RiDownloadFill />}>
+              Download Archive
+            </Button>
+          </Link>
+        ) : null}
+      </Flex>
     </Flex>
   )
 }

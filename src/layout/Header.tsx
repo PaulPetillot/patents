@@ -1,4 +1,7 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Link } from '@chakra-ui/react'
+import { Link as ReactRouterLink } from 'react-router-dom'
+
+import { ROUTES } from '~/router/routes'
 
 import ThemeToggle from './ThemeToggle'
 
@@ -12,7 +15,16 @@ const Header = () => {
       justifyContent="center"
       gridGap={2}
     >
-      <Text fontWeight="bold">USPTO Search</Text>
+      <Link
+        as={ReactRouterLink}
+        to={ROUTES.HOME}
+        _hover={{
+          textDecoration: 'none',
+        }}
+        fontWeight="bold"
+      >
+        USPTO Search
+      </Link>
       <Box marginLeft="auto">
         <ThemeToggle />
       </Box>

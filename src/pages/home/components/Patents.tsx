@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { FixedSizeList as List } from 'react-window'
 
-import { Patent } from '~/components/Patent/Patent'
+import { PatentSkeleton } from '~/components/Skeletons/PatentSkeleton'
+import { Patent } from '~/pages/home/components/Patent'
 import type { IPatent } from '~/utils/types'
 
 const Row = ({
@@ -23,15 +23,19 @@ export const Patents = ({
   patents,
   loadMore,
   hasMore,
+  loading,
 }: {
   patents: IPatent[]
   loadMore: () => void
   hasMore: boolean
+  loading: boolean
 }) => {
   const itemSize = 860
 
-  // Using react-window to dynamically show and hide patents that are offscreen to keep a high performance page and avoid thousands of them to be on the DOM
-  return (
+  // Using react-window to dynamically render patents to have only a few of them rendered at all time.
+  return loading ? (
+    <PatentSkeleton />
+  ) : (
     <List
       height={860}
       itemCount={patents.length}
