@@ -30,7 +30,7 @@ export const SearchBar = ({ loading, handleSubmit }: ISearchBar) => {
 
   return (
     <form onSubmit={(e) => handleSubmit(e, searchValue, fromDate, toDate)}>
-      <Flex gap={2}>
+      <Flex flexDirection={['column', 'row']} gap={2}>
         <Flex
           justifyContent="center"
           alignContent="center"

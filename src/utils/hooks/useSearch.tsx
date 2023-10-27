@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import dayjs from 'dayjs'
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 
 import type { IPatent, IUseSearch } from '../types'
 
@@ -28,75 +29,80 @@ const buildRequest = (
     }),
     ...(toDate && { publicationToDate: dayjs(toDate).format(DATE_FORMAT) }),
   })
+
   apiUrl.search = params.toString()
   return apiUrl
 }
 
 export const useSearch = ({ searchTerm, fromDate, toDate }: IUseSearch) => {
   const [patents, setPatents] = useState<IPatent[]>([])
-  const [recordAmount, setRecordAmount] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [start, setStart] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const [rowsAmount, setRowsAmount] = useState(25)
+  const [recordAmount, setRecordAmount] = useState(0)
+  const [start, setStart] = useState(0)
+  const [rowAmount, setRowAmount] = useState(25)
+  const [initialLoad, setInitialLoad] = useState(true)
 
-  const fetchPatents = useCallback(async () => {
-    if (!searchTerm) return
-    try {
-      setLoading(true)
-      const response = await fetch(
-        buildRequest(searchTerm, fromDate, toDate, start, rowsAmount)
-      )
-      const { results, recordTotalQuantity } = await response.json()
-
-      // If the current start index + the rows amount is over the total results available, set that there are no more patents
-      if (start + rowsAmount > recordTotalQuantity) setHasMore(false)
-
-      // Add the new patents to the patents array
-      if (results && Array.isArray(results)) {
-        setPatents((prev) => [...prev, ...results])
-        setRecordAmount(recordTotalQuantity)
-      } else {
-        setError('Unexpected data format from API.')
-      }
-    } catch (err) {
-      setError(`Error fetching data: ${err}`)
-    } finally {
-      setLoading(false)
-    }
-  }, [searchTerm, fromDate, toDate, start, rowsAmount])
-
-  // If reaching the end, only fetch the amount of rows needed
   const loadMore = () => {
-    if (start + rowsAmount < recordAmount) {
-      setStart((prevStart) => prevStart + rowsAmount)
+    if (loading || !hasMore) return
+
+    if (recordAmount && patents.length + rowAmount > recordAmount) {
+      setRowAmount(recordAmount - patents.length)
+      setHasMore(false)
     } else {
-      setRowsAmount(recordAmount - start)
-      fetchPatents()
+      setStart(start + rowAmount)
+    }
+    if (initialLoad) {
+      setInitialLoad(false)
     }
   }
 
-  useEffect(() => {
-    if (hasMore) {
-      fetchPatents()
-    }
-  }, [fetchPatents, hasMore])
-
-  // Reset the search if the params changed
-  useEffect(() => {
-    setPatents([])
+  const resetSearch = () => {
     setHasMore(true)
+    setPatents([])
+    setRecordAmount(0)
     setStart(0)
-    setRowsAmount(25)
-  }, [searchTerm, fromDate, toDate])
+    setRowAmount(25)
+  }
+
+  useEffect(() => {
+    const fetchPatent = async () => {
+      if (!searchTerm) return
+
+      const apiUrl = buildRequest(
+        searchTerm,
+        fromDate,
+        toDate,
+        start,
+        rowAmount
+      )
+      try {
+        setLoading(true)
+        const response = await fetch(apiUrl)
+        const { results, recordTotalQuantity } = await response.json()
+
+        setPatents((prev) => [...prev, results].flat())
+        setRecordAmount(recordTotalQuantity)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPatent()
+  }, [fromDate, searchTerm, start, toDate, rowAmount])
+
+  useEffect(() => {
+    resetSearch()
+  }, [fromDate, toDate, searchTerm])
 
   return {
     patents,
-    recordAmount,
     loading,
-    error,
-    loadMore,
     hasMore,
+    recordAmount,
+    loadMore,
+    initialLoad,
   }
 }
