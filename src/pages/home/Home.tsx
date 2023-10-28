@@ -14,7 +14,7 @@ export const Home = () => {
     <Grid gap={10}>
       <Header />
       {searchParams.searchTerm && (
-        <Skeleton w={20} isLoaded={!loading}>
+        <Skeleton w={40} isLoaded={!loading}>
           <Text>{recordAmount} results</Text>
         </Skeleton>
       )}

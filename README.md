@@ -43,7 +43,7 @@ Here's an overview of the file organization and notable pieces of the codebase:
 - **Interface**:
   ChakraUI is utilized for the interface, offering a variety of well-built and tested components.
 
-## Challenge
+## Challenges
 
 One of the main challenges faced was managing the display of a massive amount of data that accumulates with each request for patents. Multiple solutions were considered, such as implementing pagination or rendering only the necessary patents. The chosen solution was the latter, employing `react-window` to render only the patents visible on the screen along with a few above and below, thus keeping the DOM lightweight and preserving performance. This choice necessitated some compromises, like setting a fixed height for each displayed patent, but it's deemed more practical than navigating through pages using next or previous buttons to view more patents.
 
@@ -70,4 +70,16 @@ The website facilitates various interactions:
    - Download patent applications and archive data via buttons available on the results or patent page.
 
 5. **Theme Toggle**:
+
    - If the white theme is straining to your eyes, switch to dark mode by clicking the button at the top right corner.
+
+6. **Auto-Scrolling**
+
+   To enhance user experience, the application supports auto-scrolling to the previously viewed patent item when navigating back from the patent details page. This feature ensures that users do not lose their place in the list, providing a smoother navigation experience.
+
+7. **Responsive Design**
+
+- The interface is mobile-friendly, ensuring a seamless user experience across a variety of device sizes.
+- Utilized Chakra UI's responsive utilities like `useBreakpointValue` to adjust component sizes, layouts, and functionalities based on the device's screen size.
+- Adjusted the layout of patent cards to be more flexible and easier to read on smaller screens, with a maximum width set to ensure readability on larger screens.
+- The flexibility of the design now allows for a more accessible and user-friendly experience, regardless of the device being used to access the web application.

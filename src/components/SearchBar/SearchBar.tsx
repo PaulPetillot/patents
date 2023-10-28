@@ -58,13 +58,19 @@ export const SearchBar = ({ loading }: ISearchBar) => {
               <SearchIcon />
             </InputRightElement>
           </InputGroup>
-          <InputGroup alignItems="center" display="flex" width="sm" gap={2}>
+          <InputGroup
+            alignItems="center"
+            justifyContent={['center', 'flex-start']}
+            display="flex"
+            maxW="sm"
+            gap={2}
+          >
             <Box>
               <FormLabel fontSize="small">From</FormLabel>
               <Input
                 name="from-date-filter"
                 placeholder="From"
-                size="sm"
+                size={['xs', 'sm']}
                 type="date"
                 value={fromDate}
                 onChange={(e) =>
@@ -81,7 +87,7 @@ export const SearchBar = ({ loading }: ISearchBar) => {
               <Input
                 name="to-date-filter"
                 placeholder="To"
-                size="sm"
+                size={['xs', 'sm']}
                 type="date"
                 value={toDate}
                 onChange={(e) =>
@@ -94,7 +100,12 @@ export const SearchBar = ({ loading }: ISearchBar) => {
             </Box>
           </InputGroup>
         </Flex>
-        <Button colorScheme="blue" isLoading={loading} type="submit">
+        <Button
+          mt={[4, 0]}
+          colorScheme="blue"
+          isLoading={loading}
+          type="submit"
+        >
           Search
         </Button>
       </Flex>

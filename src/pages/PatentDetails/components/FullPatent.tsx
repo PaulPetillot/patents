@@ -48,10 +48,10 @@ export const FullPatent = ({ patent }: { patent: IPatent }) => {
       <Flex
         flexDirection="column"
         justifyContent="space-around"
-        borderWidth="1px"
+        borderWidth={['0px', '1px']}
         borderRadius="lg"
         padding="6"
-        boxShadow="lg"
+        boxShadow={['none', 'lg']}
       >
         <Heading as="h2" size="lg" marginBottom="4">
           {inventionTitle &&
@@ -61,10 +61,7 @@ export const FullPatent = ({ patent }: { patent: IPatent }) => {
         <Flex
           flexDirection="column"
           justifyContent="space-around"
-          borderWidth="1px"
-          borderRadius="lg"
-          padding="6"
-          boxShadow="lg"
+          mt={[4, 0]}
           mb="4"
         >
           <Text mb="2">
@@ -82,14 +79,7 @@ export const FullPatent = ({ patent }: { patent: IPatent }) => {
             {publicationDocumentIdentifier || 'N/A'}
           </Text>
         </Flex>
-        <Flex
-          flexDirection="column"
-          justifyContent="space-around"
-          borderWidth="1px"
-          borderRadius="lg"
-          padding="6"
-          boxShadow="lg"
-        >
+        <Flex flexDirection="column" justifyContent="space-around">
           <Text mb="2">
             <strong>Invention Subject Matter Category:</strong>{' '}
             {inventionSubjectMatterCategory || 'N/A'}
@@ -133,15 +123,27 @@ export const FullPatent = ({ patent }: { patent: IPatent }) => {
         />
         <ExpendableText title="Claim" text={claimText?.[0] || 'N/A'} />
         {filelocationURI ? (
-          <Link href={filelocationURI} isExternal color="blue.500">
-            <Button mt="4" leftIcon={<RiDownloadFill />}>
+          <Link
+            mx="auto"
+            w={['full', 'sm']}
+            href={filelocationURI}
+            isExternal
+            color="blue.500"
+          >
+            <Button w={['full', 'sm']} mt="4" leftIcon={<RiDownloadFill />}>
               Download Patent Application
             </Button>
           </Link>
         ) : null}
         {archiveURI ? (
-          <Link href={archiveURI} isExternal color="blue.500">
-            <Button mt="4" leftIcon={<RiDownloadFill />}>
+          <Link
+            mx="auto"
+            w={['full', 'sm']}
+            href={archiveURI}
+            isExternal
+            color="blue.500"
+          >
+            <Button w={['full', 'sm']} mt="4" leftIcon={<RiDownloadFill />}>
               Download Archive
             </Button>
           </Link>

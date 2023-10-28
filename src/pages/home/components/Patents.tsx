@@ -3,19 +3,26 @@ import { FixedSizeList as List } from 'react-window'
 
 import { PatentSkeleton } from '~/components/Skeletons/PatentSkeleton'
 import { Patent } from '~/pages/home/components/Patent'
+import { usePatents } from '~/utils/hooks/usePatents'
 import type { IPatent } from '~/utils/types'
 
 const Row = ({
   index,
   style,
   patents,
+  loading,
 }: {
   index: number
   style: React.CSSProperties | undefined
   patents: IPatent[]
+  loading: boolean
 }) => (
   <Box style={style}>
-    <Patent patent={patents[index]} />
+    {loading ? (
+      <PatentSkeleton />
+    ) : (
+      <Patent index={index} patent={patents[index]} />
+    )}
   </Box>
 )
 
@@ -31,12 +38,13 @@ export const Patents = ({
   loading: boolean
 }) => {
   const itemSize = 860
+  const { searchResultClickedIndex } = usePatents()
+  const initialOffset = searchResultClickedIndex * itemSize
 
   // Using react-window to dynamically render patents to have only a few of them rendered at all time.
-  return loading ? (
-    <PatentSkeleton />
-  ) : (
+  return (
     <List
+      initialScrollOffset={initialOffset}
       height={860}
       itemCount={patents.length}
       itemSize={itemSize}
@@ -48,7 +56,7 @@ export const Patents = ({
       }}
     >
       {({ style, index }) => (
-        <Row style={style} index={index} patents={patents} />
+        <Row loading={loading} style={style} index={index} patents={patents} />
       )}
     </List>
   )
